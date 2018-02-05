@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   
+    http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"  
+    version="2.1">  
+    <description>  
+    <![CDATA[mysecurity Tags]]>  
+    </description>  
+    <tlib-version>1.0</tlib-version>  
+    <short-name>mysecurity</short-name>  
+    <uri>http://sky.org.cn</uri>  
+    <tag>  
+        <description>  
+        <![CDATA[mysecurity Tags]]>  
+        </description>  
+        <name>authorize</name>  
+        <tag-class>  
+            org.sky.sys.security.tag.MyAuthorizeTag  
+        </tag-class>  
+        <body-content>JSP</body-content>  
+        <attribute>  
+            <name>securl</name>  
+            <required>false</required>  
+            <rtexprvalue>true</rtexprvalue>  
+            <type>java.lang.String</type>  
+        </attribute>  
+    </tag>  
+</taglib>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sky.sys.client.SysLogMapper">
+  <resultMap id="BaseResultMap" type="org.sky.sys.model.SysLog">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="USER_CODE" jdbcType="VARCHAR" property="userCode" />
+    <result column="OPT_TIME" jdbcType="TIMESTAMP" property="optTime" />
+    <result column="IP" jdbcType="VARCHAR" property="ip" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="OPT_NAME" jdbcType="VARCHAR" property="optName" />
+    <result column="OPT_METHOD" jdbcType="VARCHAR" property="optMethod" />
+    <result column="OPT_PARAM" jdbcType="VARCHAR" property="optParam" />
+    <result column="LAST_TIME" jdbcType="SMALLINT" property="lastTime" />
+    <result column="OPT_RESULT" jdbcType="VARCHAR" property="optResult" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, USER_CODE, OPT_TIME, IP, URL, OPT_NAME, OPT_METHOD, OPT_PARAM, LAST_TIME, OPT_RESULT
+  </sql>
+  <select id="selectByExample" parameterType="org.sky.sys.model.SysLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="MySqlPaginationSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_log
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.sky.sys.model.SysLogExample">
+    delete from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.sky.sys.model.SysLog">
+    insert into sys_log (ID, USER_CODE, OPT_TIME, 
+      IP, URL, OPT_NAME, OPT_METHOD, 
+      OPT_PARAM, LAST_TIME, OPT_RESULT
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{optTime,jdbcType=TIMESTAMP}, 
+      #{ip,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{optName,jdbcType=VARCHAR}, #{optMethod,jdbcType=VARCHAR}, 
+      #{optParam,jdbcType=VARCHAR}, #{lastTime,jdbcType=SMALLINT}, #{optResult,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sky.sys.model.SysLog">
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="userCode != null">
+        USER_CODE,
+      </if>
+      <if test="optTime != null">
+        OPT_TIME,
+      </if>
+      <if test="ip != null">
+        IP,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="optName != null">
+        OPT_NAME,
+      </if>
+      <if test="optMethod != null">
+        OPT_METHOD,
+      </if>
+      <if test="optParam != null">
+        OPT_PARAM,
+      </if>
+      <if test="lastTime != null">
+        LAST_TIME,
+      </if>
+      <if test="optResult != null">
+        OPT_RESULT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optTime != null">
+        #{optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="optName != null">
+        #{optName,jdbcType=VARCHAR},
+      </if>
+      <if test="optMethod != null">
+        #{optMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="optParam != null">
+        #{optParam,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null">
+        #{lastTime,jdbcType=SMALLINT},
+      </if>
+      <if test="optResult != null">
+        #{optResult,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.sky.sys.model.SysLogExample" resultType="java.lang.Long">
+    select count(*) from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sys_log
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCode != null">
+        USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optTime != null">
+        OPT_TIME = #{record.optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ip != null">
+        IP = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        URL = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optName != null">
+        OPT_NAME = #{record.optName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optMethod != null">
+        OPT_METHOD = #{record.optMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optParam != null">
+        OPT_PARAM = #{record.optParam,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastTime != null">
+        LAST_TIME = #{record.lastTime,jdbcType=SMALLINT},
+      </if>
+      <if test="record.optResult != null">
+        OPT_RESULT = #{record.optResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_log
+    set ID = #{record.id,jdbcType=VARCHAR},
+      USER_CODE = #{record.userCode,jdbcType=VARCHAR},
+      OPT_TIME = #{record.optTime,jdbcType=TIMESTAMP},
+      IP = #{record.ip,jdbcType=VARCHAR},
+      URL = #{record.url,jdbcType=VARCHAR},
+      OPT_NAME = #{record.optName,jdbcType=VARCHAR},
+      OPT_METHOD = #{record.optMethod,jdbcType=VARCHAR},
+      OPT_PARAM = #{record.optParam,jdbcType=VARCHAR},
+      LAST_TIME = #{record.lastTime,jdbcType=SMALLINT},
+      OPT_RESULT = #{record.optResult,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sky.sys.model.SysLog">
+    update sys_log
+    <set>
+      <if test="userCode != null">
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optTime != null">
+        OPT_TIME = #{optTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null">
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="optName != null">
+        OPT_NAME = #{optName,jdbcType=VARCHAR},
+      </if>
+      <if test="optMethod != null">
+        OPT_METHOD = #{optMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="optParam != null">
+        OPT_PARAM = #{optParam,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null">
+        LAST_TIME = #{lastTime,jdbcType=SMALLINT},
+      </if>
+      <if test="optResult != null">
+        OPT_RESULT = #{optResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sky.sys.model.SysLog">
+    update sys_log
+    set USER_CODE = #{userCode,jdbcType=VARCHAR},
+      OPT_TIME = #{optTime,jdbcType=TIMESTAMP},
+      IP = #{ip,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      OPT_NAME = #{optName,jdbcType=VARCHAR},
+      OPT_METHOD = #{optMethod,jdbcType=VARCHAR},
+      OPT_PARAM = #{optParam,jdbcType=VARCHAR},
+      LAST_TIME = #{lastTime,jdbcType=SMALLINT},
+      OPT_RESULT = #{optResult,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <sql id="MySqlPaginationSuffix">
+    <if test="page != null">
+      <![CDATA[ limit #{page.begin},#{page.rows} ]]>
+    </if>
+  </sql>
+</mapper>

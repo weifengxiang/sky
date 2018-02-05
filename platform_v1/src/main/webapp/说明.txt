@@ -1,0 +1,7 @@
+1:连接池监控程序
+http://localhost:8080/es/druid/index.html
+经测试连接池中链接//conn.close();不需要关闭
+2:spring:
+crsf:只能针对POST有效
+3:form加载数据时返回JSON以后的string数据能正确显示日期格式
+4:所有返回数据必须用jsonutils进行解析 否则时区问题会引起日期时差

@@ -1,0 +1,121 @@
+*{
+	font-size:12px;
+}
+html{ 
+	margin:0px; 
+	height:100%; 
+}
+body {
+    font-family:verdana,helvetica,arial,sans-serif;
+    padding:0px;
+    font-size:12px;
+    margin:0; 
+	height:100%; 
+	border:false;
+}
+h2 {
+    font-size:18px;
+    font-weight:bold;
+    margin:0;
+    margin-bottom:15px;
+}
+.demo-info{
+	padding:0 0 12px 0;
+}
+.demo-tip{
+	display:none;
+}
+/*设置只读样式*/
+input[readonly]{  
+    background-color: #efefef;  
+}
+/*table单元格默认值*/
+table{   
+	border-collapse:collapse;
+}
+table tr th{   
+	border:1px solid #82B3E1;   
+	text-align: right; 
+	white-space: nowrap;
+	padding-right: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+} 
+table tr td{   
+	border:1px solid #82B3E1;
+	text-align: left;
+	white-space: nowrap;
+	padding-left: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+/*无边框table*/
+table.noborder{   
+	border-collapse:collapse;
+}
+table.noborder tr th{   
+	border:0px;   
+	text-align: right; 
+	white-space: nowrap;
+	padding-right: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+} 
+table.noborder tr td{   
+	border:0px;
+	text-align: left;
+	white-space: nowrap;
+	padding-left: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+label{
+	font-weight: normal; 
+}
+.textbox{
+	border-radius: 0px 0px 0px 0px;
+}
+.textbox .textbox-text{
+	padding-left: 1px;
+	padding-right: 0px;
+	border-radius: 0px 0px 0px 0px;
+	webkit-border-radius: 0px 0px 0px 0px
+}
+.l-btn{
+	border-radius: 0px 0px 0px 0px;
+	margin: 2px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.l-btn-plain:hover {
+	border-radius: 0px 0px 0px 0px;
+	margin: 1px 2px 1px 2px;
+	padding: 0px;
+}
+.menu-active{
+	border-radius: 0px 0px 0px 0px;
+}
+.window, .window-shadow{
+	border-radius: 0px 0px 0px 0px;
+}
+.tabs li a.tabs-inner{
+	border-radius: 0px 0px 0px 0px;
+}
+.skymask{
+	z-index: 9999;
+}
+.datebox-button{
+	padding: 2px 2px 2px 2px;
+}
+.datebox-button tr td{
+	text-align: center;
+}
+.calendar-dtable tr th{
+	border:0px;
+}
+.dialog-toolbar table tr td{
+	border:0px;
+}
+.portal-column-td{
+	border:0px;
+}

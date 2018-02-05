@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sky.sys.client.SysMenuMapper">
+  <resultMap id="BaseResultMap" type="org.sky.sys.model.SysMenu">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PARENT_CODE" jdbcType="VARCHAR" property="parentCode" />
+    <result column="SEQ" jdbcType="SMALLINT" property="seq" />
+    <result column="IS_LEAF" jdbcType="CHAR" property="isLeaf" />
+    <result column="ICON" jdbcType="VARCHAR" property="icon" />
+    <result column="NOTE" jdbcType="VARCHAR" property="note" />
+    <result column="CREATER" jdbcType="VARCHAR" property="creater" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATER" jdbcType="VARCHAR" property="updater" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  	<result column="DEF_URL" jdbcType="VARCHAR" property="defUrl" />
+    <result column="CHILD_COUNT" jdbcType="VARCHAR" property="childCount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, CODE, NAME, PARENT_CODE, SEQ, IS_LEAF, ICON, NOTE, CREATER, CREATE_TIME, UPDATER, 
+    UPDATE_TIME,
+    (SELECT URL FROM sys_operation SO WHERE SO.MENU_CODE=SYS_MENU.CODE AND SO.IS_DEFAULT='1') as DEF_URL,
+    (CASE   
+    	WHEN IS_LEAF='1' THEN 
+    		(SELECT COUNT(1) FROM sys_operation SO WHERE SO.MENU_CODE=SYS_MENU.CODE)
+        WHEN IS_LEAF='0' THEN 
+        	(SELECT COUNT(1) FROM sys_menu SM WHERE SM.PARENT_CODE= SYS_MENU.CODE)
+        ELSE 0 END
+     ) AS CHILD_COUNT
+  </sql>
+  <select id="selectByExample" parameterType="org.sky.sys.model.SysMenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="MySqlPaginationSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_menu
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.sky.sys.model.SysMenuExample">
+    delete from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.sky.sys.model.SysMenu">
+    insert into sys_menu (ID, CODE, NAME, 
+      PARENT_CODE, SEQ, IS_LEAF, 
+      ICON, NOTE, CREATER, 
+      CREATE_TIME, UPDATER, UPDATE_TIME
+      )
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{parentCode,jdbcType=VARCHAR}, #{seq,jdbcType=SMALLINT}, #{isLeaf,jdbcType=CHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sky.sys.model.SysMenu">
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="parentCode != null">
+        PARENT_CODE,
+      </if>
+      <if test="seq != null">
+        SEQ,
+      </if>
+      <if test="isLeaf != null">
+        IS_LEAF,
+      </if>
+      <if test="icon != null">
+        ICON,
+      </if>
+      <if test="note != null">
+        NOTE,
+      </if>
+      <if test="creater != null">
+        CREATER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updater != null">
+        UPDATER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=SMALLINT},
+      </if>
+      <if test="isLeaf != null">
+        #{isLeaf,jdbcType=CHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.sky.sys.model.SysMenuExample" resultType="java.lang.Long">
+    select count(*) from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sys_menu
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.code != null">
+        CODE = #{record.code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        NAME = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentCode != null">
+        PARENT_CODE = #{record.parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.seq != null">
+        SEQ = #{record.seq,jdbcType=SMALLINT},
+      </if>
+      <if test="record.isLeaf != null">
+        IS_LEAF = #{record.isLeaf,jdbcType=CHAR},
+      </if>
+      <if test="record.icon != null">
+        ICON = #{record.icon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.note != null">
+        NOTE = #{record.note,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creater != null">
+        CREATER = #{record.creater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updater != null">
+        UPDATER = #{record.updater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_menu
+    set ID = #{record.id,jdbcType=VARCHAR},
+      CODE = #{record.code,jdbcType=VARCHAR},
+      NAME = #{record.name,jdbcType=VARCHAR},
+      PARENT_CODE = #{record.parentCode,jdbcType=VARCHAR},
+      SEQ = #{record.seq,jdbcType=SMALLINT},
+      IS_LEAF = #{record.isLeaf,jdbcType=CHAR},
+      ICON = #{record.icon,jdbcType=VARCHAR},
+      NOTE = #{record.note,jdbcType=VARCHAR},
+      CREATER = #{record.creater,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{record.updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sky.sys.model.SysMenu">
+    update sys_menu
+    <set>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null">
+        PARENT_CODE = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        SEQ = #{seq,jdbcType=SMALLINT},
+      </if>
+      <if test="isLeaf != null">
+        IS_LEAF = #{isLeaf,jdbcType=CHAR},
+      </if>
+      <if test="icon != null">
+        ICON = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        CREATER = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        UPDATER = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sky.sys.model.SysMenu">
+    update sys_menu
+    set CODE = #{code,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PARENT_CODE = #{parentCode,jdbcType=VARCHAR},
+      SEQ = #{seq,jdbcType=SMALLINT},
+      IS_LEAF = #{isLeaf,jdbcType=CHAR},
+      ICON = #{icon,jdbcType=VARCHAR},
+      NOTE = #{note,jdbcType=VARCHAR},
+      CREATER = #{creater,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <sql id="MySqlPaginationSuffix">
+    <if test="page != null">
+      <![CDATA[ limit #{page.begin},#{page.rows} ]]>
+    </if>
+  </sql>
+  <!-- 根据用户查询权限菜单 -->
+  <select id="selectLeafMenuByUserCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select sm.*,so.URL as DEF_URL, 0 as CHILD_COUNT
+	from sys_user_role sur,
+		 sys_role_operation sro,
+		 sys_operation so,
+		 sys_menu sm
+	where sur.user_code=#{userCode,jdbcType=VARCHAR}
+	  and sur.role_code=sro.role_code
+	  and sro.ope_code=so.code
+	  and so.is_default='1'
+	  and so.menu_code=sm.code
+  </select>
+</mapper>

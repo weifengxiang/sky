@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    	<!-- 安全控制 --> 
+    	<!--不用添加到安全容器中去-->
+    	<security:http disable-url-rewriting="true" pattern="/skin/**" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/skin/js/**" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/skin/jquery/**" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/druid/*" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/securitycode" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/equalseccode" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/logout" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/anonymous/**" security="none"></security:http>
+    	<security:http disable-url-rewriting="true" pattern="/error/**" security="none"></security:http>
+    <!--  -->
+    <security:http auto-config="true"  disable-url-rewriting="true"
+    		authentication-manager-ref="authenicationmanager" >
+ 
+ 		<!-- 认证访问登录后访问  过滤ajax请求(添加后SESSION失效后自动跳转login页面)-->
+ 	 	<security:intercept-url pattern="/sys/**"  access="hasRole('ROLE_USER')"/>
+ 	 	<security:intercept-url pattern="/loginsuccess"  access="hasRole('ROLE_USER')"/>
+ 	 	
+ 	 	<security:form-login login-page="/login"
+ 	 		login-processing-url="/j_spring_security_check"  
+ 	 	    authentication-success-handler-ref="authenticationSuccessHandler"
+ 	 	    authentication-failure-handler-ref="authenticationFailureHandler"/>
+ 	 	<security:logout invalidate-session="true" logout-url="/logout" logout-success-url="/" />
+ 	 	<!-- 自定义权限认证失败后跳转 -->
+ 	 	<security:access-denied-handler ref="accessDeniedHandler"/>
+ 	 	<security:csrf request-matcher-ref="csrfSecurityRequestMatcher"/>
+ 	 	<security:headers>
+ 	 		<security:cache-control />
+
+ 	 		<security:frame-options disabled="true"/>
+ 	 
+ 	 		<security:content-type-options />
+ 	 		<security:xss-protection />
+ 	 	</security:headers>
+ 	 	
+ 	 	<!-- session管理，invalid-session-url指定使用已经超时的sessionId进行请求需要重定向的页面
+ 	 		加上 invalid-session-url='/' session失效后再登陆不会跳转到之前页面
+ 	 		1.session固化保护-通过session-fixation-protection配置 
+			2.session并发控制-通过concurrency-control配置 
+ 	 	 -->
+ 	 	<security:session-management session-fixation-protection="migrateSession">
+ 	 		<!-- 必须要有invalid-session-url属性，否则不会踢掉原来的登录  -->  
+            <!-- 被踢掉的用户再发出请求会转到/sessionexpired.jsp页面  -->  
+ 	 		<security:concurrency-control error-if-maximum-exceeded="false" max-sessions="3"  expired-url="/error/kickout"/>
+ 	 		 <!-- error-if-maximum-exceeded属性为false的话，踢掉原来的登录， max-sessions默认为1 -->  
+             <!-- expired-url="/kickout.jsp" 不设置的话会提示This session has been expired (possibly due to multiple concurrent logins being attempted as the same user). -->  
+             <!-- 然后再刷新的话，转到/sessionexpired.jsp -->  
+             <!-- expired-url="/kickout.jsp" 设置的话会转到/sessionexpired.jsp-->    
+             <!-- error-if-maximum-exceeded属性为true的话，如果帐号已经登录，在其它地方这个帐号就登录不了了 -->  
+ 	 	</security:session-management>
+ 	 	<!-- 自定义权限过滤 -->
+ 	 	<security:custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+ 	 </security:http>
+    <security:authentication-manager alias="authenicationmanager">
+  		<security:authentication-provider ref="authenprovider"/>
+  	</security:authentication-manager> 
+  	<!--自定义请求过滤  -->
+  	<!-- 配置过滤器 -->  
+    <bean id="myFilter"  
+        class="org.sky.sys.security.MySecurityFilter">
+  		<property name="authenticationManager"  ref="authenicationmanager"/> 
+	    <property name="securityMetadataSource" ref="mySecurityMetadataSource" />
+	    <property name="accessDecisionManager"  ref="myAccessDecisionManager"/>  
+  	</bean>
+  	<bean id="myAccessDecisionManager" class="org.sky.sys.security.MyAccessDecisionManager">
+  	</bean>
+  	<bean id="mySecurityMetadataSource" class="org.sky.sys.security.MySecurityMetadataSource">
+  	</bean>
+  	<bean id="authenprovider" class="org.sky.sys.security.MyAuthenticationProvider">
+  	</bean>
+  	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:messages_zh_CN</value>
+			</list>
+		</property>
+	</bean>
+	<mvc:interceptors>
+    	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" /> 
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="org.sky.sys.security.MyAuthInterceptor"></bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/jsp/**" />
+		 	<bean class="org.sky.sys.security.MySqlInjectionInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<bean id="authenticationSuccessHandler" class="org.sky.sys.security.MyAuthenticationSuccessHandler">  
+    	<property name="defaultTargetUrl" value="/loginsuccess"></property>  
+	</bean>
+	<bean id="authenticationFailureHandler"  
+             class="org.sky.sys.security.MyAuthenticationFailureHandler"> 
+        <property name="defaultTargetUrl" value="/loginfailed"></property>
+    </bean>
+    <!-- 自定义权限不足处理程序 -->  
+	<bean id="accessDeniedHandler" class="org.sky.sys.security.MyDefaultAccessDeniedHandler">  
+	    <property name="errorPage" value="/error/denied"></property>  
+	</bean> 
+    <bean id="csrfSecurityRequestMatcher" class="org.sky.sys.security.MyCsrfSecurityRequestMatcher">
+         <property name="execludeUrls">
+             <list>
+                 <value>/ws/</value>
+             </list>
+         </property>
+     </bean>
+</beans>
