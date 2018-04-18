@@ -81,7 +81,9 @@
 	        </array>
         </property>
     </bean>
-    
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">     
+          <constructor-arg index="0" ref="sqlSessionFactory" />     
+    </bean>
     <!-- 配置druid监控spring jdbc -->
     <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor" />
  

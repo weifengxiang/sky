@@ -12,7 +12,7 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mybatis-spring:scan base-package="org.sky.sys.client" 
-						 factory-ref="sqlSessionFactory"/>			
+						 template-ref="sqlSession"/>			
 	<!-- 扫描service层 -->
     <context:component-scan base-package="org.sky.*.service" />
 </beans>
